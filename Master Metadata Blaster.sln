@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Material Design Elements", "Material Design Elements\Material Design Elements.csproj", "{8FF3AC27-8F76-4F5E-A051-FC8BACC5A9DA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metadata Form", "Material Design Elements\Metadata Form.csproj", "{8FF3AC27-8F76-4F5E-A051-FC8BACC5A9DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
