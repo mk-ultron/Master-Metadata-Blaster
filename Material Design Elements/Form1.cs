@@ -7,6 +7,22 @@ using MetadataExtractor;
 using System.IO;
 using MaterialSkin.Controls;
 
+// Michael Atkin
+// 7/24/2023
+// MS539 - Basic GUI and Exception Handling
+
+// I estimate that this project will take me about 30-40 hours total
+// ------------------------------------------------------------
+// 7/17/2023 - 2 hrs: researched C# UI toolsets and found MaterialSkin, followed tutorial to add the controls to the Toolbox and experimented with adding different controls 
+
+// 7/18/2023 - 2 hrs: researched different libraries for handling the metadata functions. Decided to use MetadataExtractor and started learning more about the classes I can use to accomplish my goal.
+
+// 7/22/2023 - 3 hrs: Researched more about using System.IO classes to be able to add the ability to select either a file or a folder from the UI. Focused on adding event handlers for each button
+
+// 7/23/2023 - 2 hrs: Got the project hooked up to github and learned how to do commit, push, and pull requests in practice. Wanted to have snapshots of my code as it was working in different states of progress
+
+// 7/24/2023 - 2 hrs: mostly debugging errors in different places and getting everything somewhat functional for my incremental assignment submission
+
 namespace Material_Design_Elements
 {
     public partial class Form1 : MaterialForm
@@ -16,7 +32,6 @@ namespace Material_Design_Elements
 
         public Form1()
         {
-            // This call is required by the designer.
             InitializeComponent();
 
             // Initialize MaterialSkinManager and add this form to its management
@@ -37,6 +52,41 @@ namespace Material_Design_Elements
             {
                 // If a file was selected, display its metadata
                 DisplayFileMetadata(openFileDialog.FileName);
+            }
+        }
+
+        // This method displays the metadata for the specified file
+        private void DisplayFileMetadata(string filePath)
+        {
+            try
+            {
+                FileInfo fileInfo = new FileInfo(filePath);
+
+                txtMetadata.Text = $"File Name: {fileInfo.Name}\r\n";
+                txtMetadata.Text += $"File Format: {fileInfo.Extension}\r\n";
+                txtMetadata.Text += $"File Size: {fileInfo.Length} bytes\r\n";
+
+                // Reading metadata using MetadataExtractor
+                var directories = ImageMetadataReader.ReadMetadata(filePath);
+                foreach (var directory in directories)
+                {
+                    foreach (var tag in directory.Tags)
+                    {
+                        txtMetadata.Text += $"{directory.Name} - {tag.Name} = {tag.Description}\r\n";
+                    }
+                    if (directory.HasError)
+                    {
+                        foreach (var error in directory.Errors)
+                            Console.WriteLine($"ERROR: {error}");
+                    }
+                }
+
+                txtMetadata.Text += "---------------\r\n";
+            }
+            catch (Exception ex)
+            {
+                // Show a message box with the error message if the metadata extraction fails
+                MessageBox.Show($"Failed to get metadata for file {filePath}: " + ex.Message);
             }
         }
 
@@ -79,39 +129,6 @@ namespace Material_Design_Elements
             }
         }
 
-        // This method displays the metadata for the specified file
-        private void DisplayFileMetadata(string filePath)
-        {
-            try
-            {
-                FileInfo fileInfo = new FileInfo(filePath);
-
-                txtMetadata.Text = $"File Name: {fileInfo.Name}\r\n";
-                txtMetadata.Text += $"File Format: {fileInfo.Extension}\r\n";
-                txtMetadata.Text += $"File Size: {fileInfo.Length} bytes\r\n";
-
-                // Reading metadata using MetadataExtractor
-                var directories = ImageMetadataReader.ReadMetadata(filePath);
-                foreach (var directory in directories)
-                {
-                    foreach (var tag in directory.Tags)
-                    {
-                        txtMetadata.Text += $"{directory.Name} - {tag.Name} = {tag.Description}\r\n";
-                    }
-                    if (directory.HasError)
-                    {
-                        foreach (var error in directory.Errors)
-                            Console.WriteLine($"ERROR: {error}");
-                    }
-                }
-
-                txtMetadata.Text += "---------------\r\n";
-            }
-            catch (Exception ex)
-            {
-                // Show a message box with the error message if the metadata extraction fails
-                MessageBox.Show($"Failed to get metadata for file {filePath}: " + ex.Message);
-            }
-        }
+        
     }
 }
