@@ -9,7 +9,7 @@ using MaterialSkin.Controls;
 using System.Drawing;
 
 // Michael Atkin
-// 7/24/2023
+// 7/29/2023
 // MS539 - Basic GUI and Exception Handling
 
 // I estimate that this project will take me about 30-40 hours total
@@ -23,6 +23,12 @@ using System.Drawing;
 // 7/23/2023 - 2 hrs: Got the project hooked up to github and learned how to do commit, push, and pull requests in practice. Wanted to have snapshots of my code as it was working in different states of progress
 
 // 7/24/2023 - 2 hrs: mostly debugging errors in different places and getting everything somewhat functional for my incremental assignment submission
+
+// 7/26/2023 - 3 hrs: added the preview image box, researched event handling for drag and drop. debugged
+
+// 7/28/2023 - 2 hrs: implemented drag and drop behavior, updated displayMetadata method to dispose of previously loaded image when selecting another one, and to do disposal when the form is closed
+
+// 7/29/2023 - 1 hr: additional debugging, tried to add background image for picture preview but couldn't get it how I wanted. added comments and submitted incremental progress update
 
 namespace Material_Design_Elements
 {
