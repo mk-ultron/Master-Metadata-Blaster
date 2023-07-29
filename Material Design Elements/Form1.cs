@@ -6,6 +6,7 @@ using MaterialSkin;
 using MetadataExtractor;
 using System.IO;
 using MaterialSkin.Controls;
+using System.Drawing;
 
 // Michael Atkin
 // 7/24/2023
@@ -33,6 +34,7 @@ namespace Material_Design_Elements
         public Form1()
         {
             InitializeComponent();
+            txtMetadata.ReadOnly = true;
 
             // Initialize MaterialSkinManager and add this form to its management
             var materialSkinManager = MaterialSkinManager.Instance;
@@ -41,7 +43,16 @@ namespace Material_Design_Elements
             // Set the theme and color scheme for this material form
             materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
             materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey800, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
-        }
+
+            // Enable drag and drop for the PictureBox
+            pictureBoxPreview.AllowDrop = true;
+
+            // Register drag and drop event handlers
+            pictureBoxPreview.DragEnter += new DragEventHandler(pictureBoxPreview_DragEnter);
+            pictureBoxPreview.DragDrop += new DragEventHandler(pictureBoxPreview_DragDrop);
+            pictureBoxPreview.DragLeave += new EventHandler(pictureBoxPreview_DragLeave);
+        
+    }
 
         // This event handler is triggered when the "Select File" button is clicked
         private void btnSelectFile_Click_1(object sender, EventArgs e)
@@ -55,11 +66,45 @@ namespace Material_Design_Elements
             }
         }
 
-        // This method displays the metadata for the specified file
+        // Handle the DragEnter event for PictureBox, allow dropping files, and change the border style
+        private void pictureBoxPreview_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+                pictureBoxPreview.BorderStyle = BorderStyle.FixedSingle; // Change border style when a file is dragged over
+            }
+        }
+
+        // Handle the DragDrop event for PictureBox, get the file path, and call DisplayFileMetadata
+        private void pictureBoxPreview_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (files.Length > 0)
+            {
+                string filePath = files[0];
+                DisplayFileMetadata(filePath); // Call the method to display metadata and preview the image
+            }
+        }
+
+        // Handle the DragLeave event for PictureBox, revert the border style to original
+        private void pictureBoxPreview_DragLeave(object sender, EventArgs e)
+        {
+            pictureBoxPreview.BorderStyle = BorderStyle.None; // Restore to original style
+        }
+
+        // This method reads the metadata of the selected file, displays it in a TextBox, and also loads the image into a PictureBox, disposing of any previously loaded image.
         private void DisplayFileMetadata(string filePath)
         {
             try
             {
+                // Dispose of the previous image if it exists
+                if (pictureBoxPreview.Image != null)
+                {
+                    pictureBoxPreview.Image.Dispose();
+                    pictureBoxPreview.Image = null;
+                }
+
                 FileInfo fileInfo = new FileInfo(filePath);
 
                 txtMetadata.Text = $"File Name: {fileInfo.Name}\r\n";
@@ -81,14 +126,26 @@ namespace Material_Design_Elements
                     }
                 }
 
+                // Load the new image into the PictureBox
+                pictureBoxPreview.Image = new Bitmap(filePath);
+
                 txtMetadata.Text += "---------------\r\n";
             }
             catch (Exception ex)
             {
-                // Show a message box with the error message if the metadata extraction fails
                 MessageBox.Show($"Failed to get metadata for file {filePath}: " + ex.Message);
             }
         }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (pictureBoxPreview.Image != null)
+            {
+                pictureBoxPreview.Image.Dispose();
+            }
+        }
+
+
 
         // This event handler is triggered when the "Select Folder" button is clicked
         private void btnSelectFolder_Click(object sender, EventArgs e)
@@ -128,7 +185,5 @@ namespace Material_Design_Elements
                 DisplayFileMetadata(filePath);
             }
         }
-
-        
     }
 }
