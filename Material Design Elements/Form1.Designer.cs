@@ -121,12 +121,14 @@ namespace Material_Design_Elements
             this.lstFiles.MinimumSize = new System.Drawing.Size(200, 100);
             this.lstFiles.MouseLocation = new System.Drawing.Point(-1, -1);
             this.lstFiles.MouseState = MaterialSkin.MouseState.OUT;
+            this.lstFiles.MultiSelect = false;
             this.lstFiles.Name = "lstFiles";
             this.lstFiles.OwnerDraw = true;
             this.lstFiles.Size = new System.Drawing.Size(266, 525);
             this.lstFiles.TabIndex = 8;
             this.lstFiles.UseCompatibleStateImageBehavior = false;
             this.lstFiles.View = System.Windows.Forms.View.Details;
+            this.lstFiles.SelectedIndexChanged += new System.EventHandler(this.lstFiles_SelectedIndexChanged);
             // 
             // materialLabel2
             // 

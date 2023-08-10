@@ -102,6 +102,7 @@ namespace Material_Design_Elements
         // This method reads the metadata of the selected file, displays it in a TextBox, and also loads the image into a PictureBox, disposing of any previously loaded image.
         private void DisplayFileMetadata(string filePath)
         {
+            Console.WriteLine($"DisplayFileMetadata called for: {filePath}");
             try
             {
                 // Dispose of the previous image if it exists
@@ -160,6 +161,21 @@ namespace Material_Design_Elements
             // Show the folder dialog and check if a folder was selected
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
+                // Clear the ListView before adding new items
+                lstFiles.Items.Clear();
+
+                // Ensure there's a column in the ListView for details view
+                if (lstFiles.Columns.Count == 0)
+                {
+                    lstFiles.Columns.Add("File Name", -2, HorizontalAlignment.Left);
+                }
+
+                lstFiles.View = View.Details;  // Set the view to show details
+                lstFiles.FullRowSelect = true; // Select the item and subitems when selection is made
+
+                // Suspend drawing
+                lstFiles.BeginUpdate();
+
                 // Get all the files in the selected folder
                 string[] files = System.IO.Directory.GetFiles(folderBrowserDialog.SelectedPath);
                 foreach (string file in files)
@@ -168,13 +184,28 @@ namespace Material_Design_Elements
                     // Only add files with image extensions to the ListView
                     if (new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp" }.Contains(fileInfo.Extension.ToLower()))
                     {
+                        Console.WriteLine($"Adding to ListView: {file}");
+                        if (!File.Exists(file))
+                        {
+                            Console.WriteLine($"Error: File does not exist - {file}");
+                            continue; // Skip adding this file
+                        }
+
                         // Create a new ListViewItem for each file
-                        ListViewItem item = new ListViewItem(fileInfo.Name);
-                        // Store the full file path in the Tag property
+                        ListViewItem item = new ListViewItem();
+                        item.Text = fileInfo.Name;  // Set the text explicitly
+                                                    // Store the full file path in the Tag property
                         item.Tag = file;
                         lstFiles.Items.Add(item);
                     }
+                    else
+                    {
+                        Console.WriteLine($"Skipped: {fileInfo.Name}");
+                    }
                 }
+
+                // Resume drawing
+                lstFiles.EndUpdate();
             }
         }
 
@@ -190,6 +221,11 @@ namespace Material_Design_Elements
                 // Display the metadata for the selected file
                 DisplayFileMetadata(filePath);
             }
+        }
+
+        private void lstFiles_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+
         }
     }
 }
