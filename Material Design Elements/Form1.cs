@@ -9,7 +9,7 @@ using MaterialSkin.Controls;
 using System.Drawing;
 
 // Michael Atkin
-// 7/29/2023
+// 8/13/2023
 // MS539 - Basic GUI and Exception Handling
 
 // I estimate that this project will take me about 30-40 hours total
@@ -30,6 +30,10 @@ using System.Drawing;
 
 // 7/29/2023 - 1 hr: additional debugging, tried to add background image for picture preview but couldn't get it how I wanted. added comments and submitted incremental progress update
 
+// 8/10/2023 - 4 hours: researching and debugging how to get the folder select pane to populate items and display their metadata. I had to add code to clear the ListView before adding items, print out every image file path you attempt to add to the list to ensure the paths are correct and the files exists, add explicit redrawing, and check the ListViewItem creation and ListView properties to figure it out. After I got the list of folder items to finally display I had to figure out why the metadata list wasn't populating when I selected an item. I eventually found that the event wasn't correctly bound to the event handler method.
+
+// 8/12/2023 - 3 hours: improving the UI, replaced the regular text box with a rich text box control so I can add more formatting to the metadata.
+
 namespace Material_Design_Elements
 {
     public partial class Form1 : MaterialForm
@@ -40,7 +44,7 @@ namespace Material_Design_Elements
         public Form1()
         {
             InitializeComponent();
-            txtMetadata.ReadOnly = true;
+            rtbMetadata.ReadOnly = true;
 
             // Initialize MaterialSkinManager and add this form to its management
             var materialSkinManager = MaterialSkinManager.Instance;
@@ -99,10 +103,9 @@ namespace Material_Design_Elements
             pictureBoxPreview.BorderStyle = BorderStyle.None; // Restore to original style
         }
 
-        // This method reads the metadata of the selected file, displays it in a TextBox, and also loads the image into a PictureBox, disposing of any previously loaded image.
+        // This method reads the metadata of the selected file, displays it in a TextBox, and also loads the image into a PictureBox, disposing of any previously loaded image. 
         private void DisplayFileMetadata(string filePath)
         {
-            Console.WriteLine($"DisplayFileMetadata called for: {filePath}");
             try
             {
                 // Dispose of the previous image if it exists
@@ -114,9 +117,38 @@ namespace Material_Design_Elements
 
                 FileInfo fileInfo = new FileInfo(filePath);
 
-                txtMetadata.Text = $"File Name: {fileInfo.Name}\r\n";
-                txtMetadata.Text += $"File Format: {fileInfo.Extension}\r\n";
-                txtMetadata.Text += $"File Size: {fileInfo.Length} bytes\r\n";
+                rtbMetadata.Clear();
+
+                AppendBoldText("File Name: ");
+                rtbMetadata.AppendText($"{fileInfo.Name}\r\n");
+
+                AppendBoldText("File Format: ");
+                rtbMetadata.AppendText($"{fileInfo.Extension}\r\n");
+
+                long fileSizeInBytes = fileInfo.Length;
+                double fileSizeInKB = fileSizeInBytes / 1024.0;
+                double fileSizeInMB = fileSizeInKB / 1024.0;
+
+                AppendBoldText("File Size: ");
+                if (fileSizeInKB < 1000)
+                {
+                    rtbMetadata.AppendText($"{fileSizeInKB:F2} KB\r\n");
+                }
+                else
+                {
+                    rtbMetadata.AppendText($"{fileSizeInMB:F2} MB\r\n");
+                }
+
+                //Using a HashSet to keep track of metadata entries we've already added to the RichTextBox.By maintaining the seenMetadata HashSet and using it to filter out duplicates, we ensure that each metadata entry appears only once in the results.
+                HashSet<string> seenMetadata = new HashSet<string>();
+                List<string> nonPriorityMetadata = new List<string>();
+
+                // Define a priority order for metadata tags
+                List<string> priorityMetadataOrder = new List<string>
+                {
+                    "File - File Modified Date",
+                    "Date/Time Original"
+                };
 
                 // Reading metadata using MetadataExtractor
                 var directories = ImageMetadataReader.ReadMetadata(filePath);
@@ -124,8 +156,22 @@ namespace Material_Design_Elements
                 {
                     foreach (var tag in directory.Tags)
                     {
-                        txtMetadata.Text += $"{directory.Name} - {tag.Name} = {tag.Description}\r\n";
+                        string metadataInfo = $"{directory.Name} - {tag.Name} = {tag.Description}";
+
+                        // Check if the tag information matches priority order based on combined directory and tag name
+                        if (priorityMetadataOrder.Contains($"{directory.Name} - {tag.Name}") && !seenMetadata.Contains(metadataInfo))
+                        {
+                            rtbMetadata.AppendText(metadataInfo + "\r\n");
+                            seenMetadata.Add(metadataInfo);
+                        }
+                        // Otherwise, save it for later
+                        else if (!seenMetadata.Contains(metadataInfo))
+                        {
+                            nonPriorityMetadata.Add(metadataInfo);
+                            seenMetadata.Add(metadataInfo);
+                        }
                     }
+
                     if (directory.HasError)
                     {
                         foreach (var error in directory.Errors)
@@ -133,16 +179,36 @@ namespace Material_Design_Elements
                     }
                 }
 
-                // Load the new image into the PictureBox
+                // Now, add non-priority metadata to the display
+                foreach (string metadataInfo in nonPriorityMetadata)
+                {
+                    rtbMetadata.AppendText(metadataInfo + "\r\n");
+                }
+
+                // Load the image into the PictureBox
                 pictureBoxPreview.Image = new Bitmap(filePath);
 
-                txtMetadata.Text += "---------------\r\n";
+                rtbMetadata.AppendText("---------------\r\n");
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Failed to get metadata for file {filePath}: " + ex.Message);
             }
         }
+
+
+        //This method is a helper function that appends bold text to the RichTextBox. It calculates the positions at which to start and end the bolding based on the length of the text being added.
+        private void AppendBoldText(string text)
+        {
+            int start = rtbMetadata.TextLength;
+            rtbMetadata.AppendText(text);
+            int end = rtbMetadata.TextLength;
+
+            rtbMetadata.Select(start, end - start);
+            rtbMetadata.SelectionFont = new Font(rtbMetadata.Font, FontStyle.Bold);
+            rtbMetadata.SelectionLength = 0; // clear selection
+        }
+
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -151,8 +217,6 @@ namespace Material_Design_Elements
                 pictureBoxPreview.Image.Dispose();
             }
         }
-
-
 
         // This event handler is triggered when the "Select Folder" button is clicked
         private void btnSelectFolder_Click(object sender, EventArgs e)
