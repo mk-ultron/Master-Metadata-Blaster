@@ -73,10 +73,60 @@ namespace Material_Design_Elements.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap drag_and_drop {
+            get {
+                object obj = ResourceManager.GetObject("drag-and-drop", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap drag_and_drop_icon_for_your_website_mobile_presentation_and_logo_design_free_vector {
             get {
                 object obj = ResourceManager.GetObject("drag-and-drop-icon-for-your-website-mobile-presentation-and-logo-design-free-vect" +
                         "or", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap drag_and_drop2 {
+            get {
+                object obj = ResourceManager.GetObject("drag-and-drop2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap drag_and_drop21 {
+            get {
+                object obj = ResourceManager.GetObject("drag-and-drop21", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap NameLogo75 {
+            get {
+                object obj = ResourceManager.GetObject("NameLogo75", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap NameLogo75D {
+            get {
+                object obj = ResourceManager.GetObject("NameLogo75D", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -100,5 +100,20 @@
   <ItemGroup>
     <None Include="Resources\vecteezy_mouse-hand-cursor_1199658.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NameLogo75.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NameLogo75D.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\drag-and-drop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\drag-and-drop2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\drag-and-drop21.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

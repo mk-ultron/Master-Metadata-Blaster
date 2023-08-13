@@ -48,6 +48,7 @@ namespace Material_Design_Elements
 
             // Initialize MaterialSkinManager and add this form to its management
             var materialSkinManager = MaterialSkinManager.Instance;
+            materialSkinManager.EnforceBackcolorOnAllComponents = false;
             materialSkinManager.AddFormToManage(this);
 
             // Set the theme and color scheme for this material form
@@ -61,8 +62,14 @@ namespace Material_Design_Elements
             pictureBoxPreview.DragEnter += new DragEventHandler(pictureBoxPreview_DragEnter);
             pictureBoxPreview.DragDrop += new DragEventHandler(pictureBoxPreview_DragDrop);
             pictureBoxPreview.DragLeave += new EventHandler(pictureBoxPreview_DragLeave);
-        
-    }
+
+            linkLabelGitHub.Text = "github";
+
+            linkLabelGitHub.LinkClicked += (sender, e) =>
+            {
+                System.Diagnostics.Process.Start("https://github.com/mk-ultron/");
+            };
+        }
 
         // This event handler is triggered when the "Select File" button is clicked
         private void btnSelectFile_Click_1(object sender, EventArgs e)
@@ -94,6 +101,9 @@ namespace Material_Design_Elements
             {
                 string filePath = files[0];
                 DisplayFileMetadata(filePath); // Call the method to display metadata and preview the image
+
+                // Now, clear the background image of the pictureBoxPreview
+                pictureBoxPreview.BackgroundImage = null;
             }
         }
 
@@ -101,6 +111,18 @@ namespace Material_Design_Elements
         private void pictureBoxPreview_DragLeave(object sender, EventArgs e)
         {
             pictureBoxPreview.BorderStyle = BorderStyle.None; // Restore to original style
+        }
+
+        private void chkTogglePreview_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkTogglePreview.Checked)
+            {
+                pictureBoxPreview.Visible = true; // Show the picture box
+            }
+            else
+            {
+                pictureBoxPreview.Visible = false; // Hide the picture box
+            }
         }
 
         // This method reads the metadata of the selected file, displays it in a TextBox, and also loads the image into a PictureBox, disposing of any previously loaded image. 
@@ -218,6 +240,15 @@ namespace Material_Design_Elements
             }
         }
 
+        private void LoadImageIntoPictureBox(string imagePath)
+        {
+            // Assuming you're loading an image like this
+            pictureBoxPreview.Image = Image.FromFile(imagePath);
+
+            // Now, clear the background image
+            pictureBoxPreview.BackgroundImage = null;
+        }
+
         // This event handler is triggered when the "Select Folder" button is clicked
         private void btnSelectFolder_Click(object sender, EventArgs e)
         {
@@ -287,7 +318,13 @@ namespace Material_Design_Elements
             }
         }
 
+
         private void lstFiles_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void materialSwitch1_CheckedChanged(object sender, EventArgs e)
         {
 
         }
