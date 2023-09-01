@@ -9,29 +9,15 @@ using MaterialSkin.Controls;
 using System.Drawing;
 
 // Michael Atkin
-// 8/13/2023
-// MS539 - Basic GUI and Exception Handling
-
-// I estimate that this project will take me about 30-40 hours total
 // ------------------------------------------------------------
 // 7/17/2023 - 2 hrs: researched C# UI toolsets and found MaterialSkin, followed tutorial to add the controls to the Toolbox and experimented with adding different controls 
-
 // 7/18/2023 - 2 hrs: researched different libraries for handling the metadata functions. Decided to use MetadataExtractor and started learning more about the classes I can use to accomplish my goal.
-
 // 7/22/2023 - 3 hrs: Researched more about using System.IO classes to be able to add the ability to select either a file or a folder from the UI. Focused on adding event handlers for each button
-
-// 7/23/2023 - 2 hrs: Got the project hooked up to github and learned how to do commit, push, and pull requests in practice. Wanted to have snapshots of my code as it was working in different states of progress
-
 // 7/24/2023 - 2 hrs: mostly debugging errors in different places and getting everything somewhat functional for my incremental assignment submission
-
 // 7/26/2023 - 3 hrs: added the preview image box, researched event handling for drag and drop. debugged
-
 // 7/28/2023 - 2 hrs: implemented drag and drop behavior, updated displayMetadata method to dispose of previously loaded image when selecting another one, and to do disposal when the form is closed
-
 // 7/29/2023 - 1 hr: additional debugging, tried to add background image for picture preview but couldn't get it how I wanted. added comments and submitted incremental progress update
-
 // 8/10/2023 - 4 hours: researching and debugging how to get the folder select pane to populate items and display their metadata. I had to add code to clear the ListView before adding items, print out every image file path you attempt to add to the list to ensure the paths are correct and the files exists, add explicit redrawing, and check the ListViewItem creation and ListView properties to figure it out. After I got the list of folder items to finally display I had to figure out why the metadata list wasn't populating when I selected an item. I eventually found that the event wasn't correctly bound to the event handler method.
-
 // 8/12/2023 - 3 hours: improving the UI, replaced the regular text box with a rich text box control so I can add more formatting to the metadata.
 
 namespace Material_Design_Elements
